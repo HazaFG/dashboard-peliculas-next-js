@@ -1,7 +1,10 @@
+import { Counter } from '@/counter-cart/components/Counter'
+
+
 export default function CounterPage() {
   return (
-    <div>
-      <h1>Este es el counter page</h1>
+    <div className="mt-78">
+      <Counter />
     </div>
   )
 }
