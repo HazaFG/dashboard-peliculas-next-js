@@ -6,7 +6,7 @@ import { SidebarMenuItem } from "./SidebarMenuItem";
 
 const menuItems = [
   {
-  path: '/dashboard/main',
+    path: '/dashboard/main',
     icon: <IoHome size = {25}></IoHome>,
     title: 'HomePage'
   },
@@ -16,10 +16,10 @@ const menuItems = [
     title: 'Counter Page'
   },
   {
-      path: '/dashboard/peliculas',
-        icon: <IoVideocamOutline size = {25}></IoVideocamOutline>,
-        title: 'Peliculas'
-      }
+    path: '/dashboard/peliculas',
+    icon: <IoVideocamOutline size = {25}></IoVideocamOutline>,
+    title: 'Peliculas'
+  }
 
 ]
 
