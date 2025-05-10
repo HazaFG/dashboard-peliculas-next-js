@@ -13,16 +13,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <div>
+    <>
+      <div className="flex">
 
         {/*Bueno, aqui vamos a meter nuestro sidebar*/}
         <Sidebar />
-        <div className="flex">
+        <div className="flex ml-76">
           <div>{children}</div>
         </div>
       </div>
-    </html>
+    </>
   )
 }
 
