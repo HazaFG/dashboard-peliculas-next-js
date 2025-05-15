@@ -1,6 +1,5 @@
 import Image from "next/image"
 import { PeliculaSimple, PeliculasResponse } from "@/peliculas"
-import { DiVim } from "react-icons/di"
 
 {
   //Aqui lo que haras sera basicamente traerte como arreglo la estructura de las peliculas
