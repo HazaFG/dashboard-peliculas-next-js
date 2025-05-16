@@ -35,8 +35,7 @@ export default async function PeliculasPage() {
   const peliculas = await getPeliculas()
   return (
     <>
-      <div className="flex ml-42">
-        <h1>Listado de Peliculas</h1>
+      <div className="flex">
         {peliculas.map(pelicula => (
           <div key={pelicula.id} className="p-4">
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -55,7 +54,7 @@ export default async function PeliculasPage() {
           </div>
         ))}
 
-      </div>
+      </div >
     </>
   )
 }

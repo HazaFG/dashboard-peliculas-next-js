@@ -18,8 +18,8 @@ export default function RootLayout({
 
         {/*Bueno, aqui vamos a meter nuestro sidebar*/}
         <Sidebar></Sidebar>
-        <div className="flex justify-center w-full ml-68">
-          <div>{children}</div>
+        <div className="flex justify-center">
+          <div className="ml-40">{children}</div>
         </div>
       </div>
     </>
