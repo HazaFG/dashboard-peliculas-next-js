@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { PeliculaSimple, PeliculasResponse } from "@/peliculas"
-import Link from 'next/link'
+import { PeliculaGrid } from "@/peliculas/components/PeliculaGrid"
 
 {
   //Aqui lo que haras sera basicamente traerte como arreglo la estructura de las peliculas
@@ -36,28 +36,9 @@ export default async function PeliculasPage() {
   const peliculas = await getPeliculas()
   return (
     <>
-      <div className="flex flex-wrap ml-80">
-        {peliculas.map(pelicula => (
-          <div key={pelicula.id} className="p-4">
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <Link href={'/pepe'}>
-                <Image
-                  src={`https://image.tmdb.org/t/p/w500${pelicula.poster_path}`}
-                  alt={pelicula.title}
-                  width={300}
-                  height={450}
-                  className="w-full object-cover"
-                />
-              </Link>
-              <div className="p-4">
-                <h2 className="text-lg font-semibold text-black">{pelicula.title}</h2>
-                <p className="text-sm text-black">{pelicula.release_date}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-
-      </div >
+      <div className="">
+        <PeliculaGrid peliculas={peliculas}></PeliculaGrid>
+      </div>
     </>
   )
 }
