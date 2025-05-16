@@ -19,7 +19,7 @@ export default function RootLayout({
         {/*Bueno, aqui vamos a meter nuestro sidebar*/}
         <Sidebar></Sidebar>
         <div className="flex justify-center">
-          <div className="ml-40">{children}</div>
+          <div>{children}</div>
         </div>
       </div>
     </>
