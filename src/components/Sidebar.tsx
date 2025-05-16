@@ -35,7 +35,7 @@ export const Sidebar = () => {
         ">
         <div className="mt-22">
           <div className="flex justify-center">
-            <Link href="/" title="home">
+            <Link href="/pepe" title="home">
               <Image
                 src="/logohazaeldev.png"
                 className="w-32"
