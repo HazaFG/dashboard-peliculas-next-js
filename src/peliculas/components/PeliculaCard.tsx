@@ -13,18 +13,21 @@ export const PeliculaCard = ({ pelicula }: Props) => {
   return (
     <>
       <div key={id} className="p-4">
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <Link href={'/pepe'}>
-            <Image
-              src={`https://image.tmdb.org/t/p/w500${poster_path}`}
-              alt={title}
-              width={300}
-              height={450}
-              className=" object-cover"
-            />
-          </Link>
-          <div className="p-4">
-            <h2 className="text-lg font-semibold text-black">{title}</h2>
+        <div className='bg-white rounded-lg shadow-md overflow-hidden'>
+          <div className="relative w-70 h-110">
+            <Link href={`dashboard/pelicula/${id}`}>
+              <Image
+                src={`https://image.tmdb.org/t/p/w500${poster_path}`}
+                alt={title}
+                fill
+                className=" object-cover"
+              />
+            </Link>
+          </div>
+          <div className="p-4 max-w-[200px]">
+            <h2 className="text-lg font-semibold text-black truncate">
+              {title}
+            </h2>
             <p className="text-sm text-black">{release_date}</p>
           </div>
         </div>

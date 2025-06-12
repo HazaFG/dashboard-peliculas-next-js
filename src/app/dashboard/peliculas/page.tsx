@@ -1,4 +1,3 @@
-import Image from "next/image"
 import { PeliculaSimple, PeliculasResponse } from "@/peliculas"
 import { PeliculaGrid } from "@/peliculas/components/PeliculaGrid"
 
