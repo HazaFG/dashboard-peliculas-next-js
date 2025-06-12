@@ -3,7 +3,7 @@
 export default function PeliculaPage() {
   return (
     <>
-      <div className="bg-gray-900 min-h-screen text-gray-100 p-8">
+      <div className="bg-gray-900 min-h-screen text-gray-100 p-8 ml-80">
         {/* Sección superior: Banner con imagen de Superman y detalles */}
         <div className="relative bg-gray-800 rounded-lg shadow-lg overflow-hidden flex items-center p-6 mb-8">
           <div className="w-1/4 pr-6 flex-shrink-0">
