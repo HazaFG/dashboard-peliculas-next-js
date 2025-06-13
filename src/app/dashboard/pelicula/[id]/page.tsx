@@ -81,9 +81,6 @@ export default async function PeliculaPage({ params }: Props) {
   const pelicula = await getPelicula(params.id);
   const actores: CastMember = await getActores(params.id)
 
-  // NOTA: Se ha quitado la URL base de imagen como una constante.
-  // Ahora se incrusta directamente en los atributos 'src' de las imágenes.
-
   return (
     <>
       <div className="bg-gray-900 min-h-screen text-gray-100 p-8 ml-80">
@@ -128,15 +125,13 @@ export default async function PeliculaPage({ params }: Props) {
               <div>
                 <span className="font-semibold">Escritor:</span>
                 <p className="text-gray-400">
-                  {/* NOTA: Tu interfaz no incluye escritores/directores. Esto se obtiene con una llamada a /credits */}
-                  James Gunn, Jerry Siegel {/* Mantenemos placeholder estático */}
+                  James Gunn, Jerry Siegel
                 </p>
               </div>
               <div>
                 <span className="font-semibold">Director:</span>
                 <p className="text-gray-400">
-                  {/* NOTA: Tu interfaz no incluye escritores/directores. Esto se obtiene con una llamada a /credits */}
-                  James Gunn {/* Mantenemos placeholder estático */}
+                  James Gunn
                 </p>
               </div>
               <div>
@@ -149,6 +144,7 @@ export default async function PeliculaPage({ params }: Props) {
               </div>
             </div>
           </div>
+
           {/* Aquí iría la imagen del actor en el banner superior derecho o el backdrop */}
           {pelicula.backdrop_path ? (
             <img
@@ -192,7 +188,6 @@ export default async function PeliculaPage({ params }: Props) {
             <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
               <h2 className="text-2xl font-bold mb-4">Social</h2>
               <div className="space-y-4">
-                {/* Esta sección no está en tu interfaz, así que se mantiene estática */}
                 <div className="bg-gray-700 p-4 rounded-lg">
                   <p className="text-gray-300">"¡Amo el mundo, necesito Superman!"</p>
                   <p className="text-gray-500 text-xs mt-2">17 Ago 2024</p>
@@ -207,7 +202,6 @@ export default async function PeliculaPage({ params }: Props) {
                 </div>
               </div>
             </div>
-            {/* Puedes agregar más secciones como "Discusiones" aquí */}
           </div>
 
           {/* Columna lateral derecha */}
@@ -239,10 +233,6 @@ export default async function PeliculaPage({ params }: Props) {
             <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
               <h2 className="text-xl font-bold mb-4">Palabras clave</h2>
               <div className="flex flex-wrap gap-2">
-                {/* Tu interfaz PeliculaIndividual no incluye 'keywords'.
-                    Necesitarías otra llamada API a /movie/{id}/keywords para obtenerlas.
-                    Mantendremos algunas estáticas por el estilo o podrías mostrarlas vacías.
-                */}
                 <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs">DC</span>
                 <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs">Superhéroe</span>
                 <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs">Aventura</span>
@@ -260,7 +250,6 @@ export default async function PeliculaPage({ params }: Props) {
             <div className="bg-gray-800 rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-bold mb-4">Colaboradores Destacados</h2>
               <div className="space-y-2">
-                {/* Esta sección no está en tu interfaz, así que se mantiene estática */}
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 bg-gray-700 rounded-full flex-shrink-0"></div>
                   <span className="text-gray-300">Usuario 1</span>
