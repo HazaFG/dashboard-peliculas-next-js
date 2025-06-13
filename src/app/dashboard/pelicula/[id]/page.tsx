@@ -1,5 +1,7 @@
+import { CastMember, CastResponse } from "@/peliculas/interfaces/pelicula-credits";
 import { PeliculaIndividual } from "@/peliculas/interfaces/pelicula-individual";
 import { notFound } from "next/navigation";
+import Image from 'next/image'
 
 
 //Sigue leyendo esto cada vez que no lo entiendas, con el tiempo entenderas mejor
@@ -42,10 +44,42 @@ const getPelicula = async (id: string): Promise<PeliculaIndividual> => {
   }
 };
 
+const getActores = async (id: string): Promise<CastMember> => {
+  const api_key = '4e72051e3bc2c615ed21d74e9a55ac50'
+
+  try {
+    const credits: CastResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${api_key}`, {
+      cache: "force-cache",
+    }).then((resp) => resp.json())
+
+    const creditos = credits.cast.map(actor => ({
+      adult: actor.adult,
+      gender: actor.gender,
+      id: actor.id,
+      known_for_department: actor.known_for_department,
+      name: actor.name,
+      original_name: actor.original_name,
+      popularity: actor.popularity,
+      profile_path: actor.profile_path,
+      cast_id: actor.cast_id,
+      character: actor.character,
+      credit_id: actor.credit_id,
+      order: actor.order
+    }))
+
+
+    return creditos;
+
+  } catch (error) {
+    console.error("Error al obtener los creditos de la pelicula", error)
+    notFound()
+  }
+}
 
 export default async function PeliculaPage({ params }: Props) {
 
   const pelicula = await getPelicula(params.id);
+  const actores: CastMember = await getActores(params.id)
 
   // NOTA: Se ha quitado la URL base de imagen como una constante.
   // Ahora se incrusta directamente en los atributos 'src' de las imágenes.
@@ -130,55 +164,25 @@ export default async function PeliculaPage({ params }: Props) {
         </div>
 
         {/* Sección de Actores Principales */}
-        <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+        <div className="overflow-x-auto max-w-410 bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
           <h2 className="text-2xl font-bold mb-6">Actores Principales</h2>
           <div className="flex space-x-6 overflow-x-auto pb-4">
-            {/* NOTA: Tu interfaz PeliculaIndividual no incluye actores directamente.
-                Necesitarías una llamada API adicional a /movie/{id}/credits para obtenerlos.
-                Por ahora, mantengo los placeholders estáticos para mantener el layout.
-            */}
-            <div className="flex-shrink-0 w-32 text-center">
-              <div className="bg-gray-700 h-32 w-32 rounded-full mx-auto mb-2 flex items-center justify-center text-gray-400 text-sm">
-                Foto
-              </div>
-              <p className="font-semibold text-sm">David Corenswet</p>
-              <p className="text-gray-400 text-xs">Clark Kent / Superman</p>
-            </div>
-            <div className="flex-shrink-0 w-32 text-center">
-              <div className="bg-gray-700 h-32 w-32 rounded-full mx-auto mb-2 flex items-center justify-center text-gray-400 text-sm">
-                Foto
-              </div>
-              <p className="font-semibold text-sm">Rachel Brosnahan</p>
-              <p className="text-gray-400 text-xs">Lois Lane</p>
-            </div>
-            <div className="flex-shrink-0 w-32 text-center">
-              <div className="bg-gray-700 h-32 w-32 rounded-full mx-auto mb-2 flex items-center justify-center text-gray-400 text-sm">
-                Foto
-              </div>
-              <p className="font-semibold text-sm">Nicholas Hoult</p>
-              <p className="text-gray-400 text-xs">Lex Luthor</p>
-            </div>
-            <div className="flex-shrink-0 w-32 text-center">
-              <div className="bg-gray-700 h-32 w-32 rounded-full mx-auto mb-2 flex items-center justify-center text-gray-400 text-sm">
-                Foto
-              </div>
-              <p className="font-semibold text-sm">Edi Gathegi</p>
-              <p className="text-gray-400 text-xs">Mr. Terrific</p>
-            </div>
-            <div className="flex-shrink-0 w-32 text-center">
-              <div className="bg-gray-700 h-32 w-32 rounded-full mx-auto mb-2 flex items-center justify-center text-gray-400 text-sm">
-                Foto
-              </div>
-              <p className="font-semibold text-sm">Anthony Carrigan</p>
-              <p className="text-gray-400 text-xs">Metamorpho</p>
-            </div>
-            <div className="flex-shrink-0 w-32 text-center">
-              <div className="bg-gray-700 h-32 w-32 rounded-full mx-auto mb-2 flex items-center justify-center text-gray-400 text-sm">
-                Foto
-              </div>
-              <p className="font-semibold text-sm">Isabela Merced</p>
-              <p className="text-gray-400 text-xs">Hawkgirl</p>
-            </div>
+            {
+              actores.map(actor => (
+                < div key={actor.id} className="flex-shrink-0 w-32 text-center" >
+                  <div className="relative bg-gray-700 h-32 w-32 rounded-full mx-auto mb-2 flex items-center justify-center text-gray-400 text-sm">
+                    <Image
+                      src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
+                      fill
+                      alt="imagen del actor"
+                    />
+
+                  </div>
+                  <p className="font-semibold text-sm">{actor.name}</p>
+                  <p className="text-gray-400 text-xs">{actor.character}</p>
+                </div>
+              ))
+            }
           </div>
         </div>
 
@@ -269,7 +273,7 @@ export default async function PeliculaPage({ params }: Props) {
             </div>
           </div>
         </div>
-      </div>
+      </div >
     </>
   )
 }
