@@ -1,26 +1,82 @@
-import Image from next / image
+import { PeliculaIndividual } from "@/peliculas/interfaces/pelicula-individual";
+import { notFound } from "next/navigation";
 
-export default function PeliculaPage() {
+
+//Sigue leyendo esto cada vez que no lo entiendas, con el tiempo entenderas mejor
+//
+//  [Página principal]
+//    └─ PeliculasPage(fetch de todas las películas)
+//          ├─ PeliculaGrid(renderiza lista)
+//                ├─ PeliculaCard(1 por película)
+//                    └─ Link href = "/dashboard/pelicula/123"
+//
+// [Al hacer click en una tarjeta]
+//    └─ Navega a: /dashboard/pelicula / 123
+//          ├─[id] / page.tsx detecta que id = 123
+//          ├─ getPelicula(123)
+//          ├─ Renderiza detalles de la película 123
+
+
+interface Props {
+  params: { id: string };
+}
+
+//Aqui nos vamos a traer nuestras peliculas jaja, aun estoy intentando entender esta fregada
+const getPelicula = async (id: string): Promise<PeliculaIndividual> => {
+  const api_key = '4e72051e3bc2c615ed21d74e9a55ac50'
+
+  try {
+    const pelicula = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${api_key}`, {
+      cache: "force-cache", // TODO: cambiar esto en un futuro
+    }).then((resp) => resp.json());
+
+    // Si la película no se encuentra, TMDB devuelve un objeto con 'success: false' o un 'status_code'
+    if (pelicula.success === false || pelicula.status_code === 34) { // 34 es 'The resource you requested could not be found.'
+      notFound();
+    }
+
+    return pelicula;
+  } catch (error) {
+    console.error("Error al obtener la película:", error);
+    notFound(); // Redirige a la página 404 si hay un error de red o de parsing
+  }
+};
+
+
+export default async function PeliculaPage({ params }: Props) {
+
+  const pelicula = await getPelicula(params.id);
+
+  // NOTA: Se ha quitado la URL base de imagen como una constante.
+  // Ahora se incrusta directamente en los atributos 'src' de las imágenes.
+
   return (
     <>
       <div className="bg-gray-900 min-h-screen text-gray-100 p-8 ml-80">
         {/* Sección superior: Banner con imagen de Superman y detalles */}
         <div className="relative bg-gray-800 rounded-lg shadow-lg overflow-hidden flex items-center p-6 mb-8">
           <div className="w-1/4 pr-6 flex-shrink-0">
-            <div className="bg-gray-700 h-96 w-full rounded-lg flex items-center justify-center text-gray-400 text-sm">
-              {/* Espacio para la imagen de la película */}
-              Póster de Superman
-            </div>
-            <div className="text-center mt-2 font-bold text-lg">SUPERMAN</div>
+            {pelicula.poster_path ? (
+              <img
+                src={`https://image.tmdb.org/t/p/w500${pelicula.poster_path}`}
+                alt={`Póster de ${pelicula.title}`}
+                className="w-full h-auto rounded-lg object-cover"
+              />
+            ) : (
+              <div className="bg-gray-700 h-96 w-full rounded-lg flex items-center justify-center text-gray-400 text-sm">
+                Póster no disponible
+              </div>
+            )}
+            <div className="text-center mt-2 font-bold text-lg">{pelicula.title.toUpperCase()}</div>
           </div>
           <div className="w-3/4">
-            <h1 className="text-4xl font-bold mb-2">Superman (2025)</h1>
+            <h1 className="text-4xl font-bold mb-2">{pelicula.title} ({pelicula.release_date ? new Date(pelicula.release_date).getFullYear() : 'N/A'})</h1>
             <div className="text-gray-400 text-sm mb-4">
-              Septiembre 2025 • Acción, Aventura, Ciencia Ficción • 2h 30m
+              {pelicula.release_date ? new Date(pelicula.release_date).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }) : 'Fecha desconocida'} • {pelicula.genres.map(genre => genre.name).join(', ')} • {pelicula.runtime ? `${Math.floor(pelicula.runtime / 60)}h ${pelicula.runtime % 60}m` : 'N/A'}
             </div>
             <div className="flex items-center space-x-4 mb-6">
               <div className="flex items-center">
-                <span className="text-xl font-bold mr-2">8.5</span>
+                <span className="text-xl font-bold mr-2">{pelicula.vote_average.toFixed(1)}</span>
                 <span className="text-gray-400">/ 10</span>
               </div>
               <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
@@ -31,35 +87,56 @@ export default function PeliculaPage() {
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-2">Resumen</h2>
               <p className="text-gray-300 leading-relaxed">
-                Mientras se establece en su nuevo hogar en Metrópolis y se embarca en un viaje para reconciliar su herencia kryptoniana con su educación humana como Clark Kent.
+                {pelicula.overview || pelicula.tagline || 'No hay resumen disponible.'}
               </p>
             </div>
             <div className="grid grid-cols-3 gap-4 text-sm">
               <div>
                 <span className="font-semibold">Escritor:</span>
-                <p className="text-gray-400">James Gunn, Jerry Siegel</p>
+                <p className="text-gray-400">
+                  {/* NOTA: Tu interfaz no incluye escritores/directores. Esto se obtiene con una llamada a /credits */}
+                  James Gunn, Jerry Siegel {/* Mantenemos placeholder estático */}
+                </p>
               </div>
               <div>
                 <span className="font-semibold">Director:</span>
-                <p className="text-gray-400">James Gunn</p>
+                <p className="text-gray-400">
+                  {/* NOTA: Tu interfaz no incluye escritores/directores. Esto se obtiene con una llamada a /credits */}
+                  James Gunn {/* Mantenemos placeholder estático */}
+                </p>
               </div>
               <div>
                 <span className="font-semibold">Productores:</span>
-                <p className="text-gray-400">Charles Roven</p>
+                <p className="text-gray-400">
+                  {pelicula.production_companies.length > 0
+                    ? pelicula.production_companies.map(company => company.name).join(', ')
+                    : 'N/A'}
+                </p>
               </div>
             </div>
           </div>
-          {/* Aquí iría la imagen del actor en el banner superior derecho */}
-          <div className="absolute top-0 right-0 w-1/4 h-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm">
-            Imagen del actor en el banner
-          </div>
+          {/* Aquí iría la imagen del actor en el banner superior derecho o el backdrop */}
+          {pelicula.backdrop_path ? (
+            <img
+              src={`https://image.tmdb.org/t/p/w500${pelicula.backdrop_path}`}
+              alt={`Imagen de fondo de ${pelicula.title}`}
+              className="absolute top-0 right-0 w-1/4 h-full object-cover opacity-70"
+            />
+          ) : (
+            <div className="absolute top-0 right-0 w-1/4 h-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm opacity-70">
+              Imagen de fondo no disponible
+            </div>
+          )}
         </div>
 
         {/* Sección de Actores Principales */}
         <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
           <h2 className="text-2xl font-bold mb-6">Actores Principales</h2>
           <div className="flex space-x-6 overflow-x-auto pb-4">
-            {/* Ejemplo de un actor */}
+            {/* NOTA: Tu interfaz PeliculaIndividual no incluye actores directamente.
+                Necesitarías una llamada API adicional a /movie/{id}/credits para obtenerlos.
+                Por ahora, mantengo los placeholders estáticos para mantener el layout.
+            */}
             <div className="flex-shrink-0 w-32 text-center">
               <div className="bg-gray-700 h-32 w-32 rounded-full mx-auto mb-2 flex items-center justify-center text-gray-400 text-sm">
                 Foto
@@ -67,7 +144,6 @@ export default function PeliculaPage() {
               <p className="font-semibold text-sm">David Corenswet</p>
               <p className="text-gray-400 text-xs">Clark Kent / Superman</p>
             </div>
-            {/* Repite este bloque para cada actor */}
             <div className="flex-shrink-0 w-32 text-center">
               <div className="bg-gray-700 h-32 w-32 rounded-full mx-auto mb-2 flex items-center justify-center text-gray-400 text-sm">
                 Foto
@@ -112,7 +188,7 @@ export default function PeliculaPage() {
             <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
               <h2 className="text-2xl font-bold mb-4">Social</h2>
               <div className="space-y-4">
-                {/* Ejemplo de un comentario */}
+                {/* Esta sección no está en tu interfaz, así que se mantiene estática */}
                 <div className="bg-gray-700 p-4 rounded-lg">
                   <p className="text-gray-300">"¡Amo el mundo, necesito Superman!"</p>
                   <p className="text-gray-500 text-xs mt-2">17 Ago 2024</p>
@@ -137,19 +213,21 @@ export default function PeliculaPage() {
               <div className="space-y-2 text-sm">
                 <div>
                   <span className="font-semibold">Estado:</span>
-                  <p className="text-gray-400">En Producción</p>
+                  <p className="text-gray-400">{pelicula.status}</p>
                 </div>
                 <div>
                   <span className="font-semibold">Idioma original:</span>
-                  <p className="text-gray-400">Inglés</p>
+                  <p className="text-gray-400">
+                    {pelicula.spoken_languages.find(lang => lang.iso_639_1 === pelicula.original_language)?.english_name || pelicula.original_language}
+                  </p>
                 </div>
                 <div>
                   <span className="font-semibold">Presupuesto:</span>
-                  <p className="text-gray-400">$330,000,000</p>
+                  <p className="text-gray-400">{pelicula.budget > 0 ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(pelicula.budget) : 'N/A'}</p>
                 </div>
                 <div>
                   <span className="font-semibold">Ingresos:</span>
-                  <p className="text-gray-400">N/A</p>
+                  <p className="text-gray-400">{pelicula.revenue > 0 ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(pelicula.revenue) : 'N/A'}</p>
                 </div>
               </div>
             </div>
@@ -157,6 +235,10 @@ export default function PeliculaPage() {
             <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
               <h2 className="text-xl font-bold mb-4">Palabras clave</h2>
               <div className="flex flex-wrap gap-2">
+                {/* Tu interfaz PeliculaIndividual no incluye 'keywords'.
+                    Necesitarías otra llamada API a /movie/{id}/keywords para obtenerlas.
+                    Mantendremos algunas estáticas por el estilo o podrías mostrarlas vacías.
+                */}
                 <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs">DC</span>
                 <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs">Superhéroe</span>
                 <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs">Aventura</span>
@@ -167,13 +249,14 @@ export default function PeliculaPage() {
             <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
               <h2 className="text-xl font-bold mb-4">Calificación del contenido</h2>
               <div className="bg-gray-700 text-white font-bold text-center py-2 rounded-lg text-lg">
-                PG-13
+                {pelicula.adult ? 'Adulto (+18)' : 'Para todo público'} {/* Inferencia básica */}
               </div>
             </div>
 
             <div className="bg-gray-800 rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-bold mb-4">Colaboradores Destacados</h2>
               <div className="space-y-2">
+                {/* Esta sección no está en tu interfaz, así que se mantiene estática */}
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 bg-gray-700 rounded-full flex-shrink-0"></div>
                   <span className="text-gray-300">Usuario 1</span>

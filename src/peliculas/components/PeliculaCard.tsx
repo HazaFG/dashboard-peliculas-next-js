@@ -15,7 +15,7 @@ export const PeliculaCard = ({ pelicula }: Props) => {
       <div key={id} className="p-4">
         <div className='bg-white rounded-lg shadow-md overflow-hidden'>
           <div className="relative w-70 h-110">
-            <Link href={`dashboard/pelicula/${id}`}>
+            <Link href={`/dashboard/pelicula/${id}`}>
               <Image
                 src={`https://image.tmdb.org/t/p/w500${poster_path}`}
                 alt={title}

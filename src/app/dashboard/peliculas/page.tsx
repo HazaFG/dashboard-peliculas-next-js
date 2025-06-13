@@ -32,7 +32,7 @@ const getPeliculas = async (): Promise<PeliculaSimple[]> => {
 
 
 export default async function PeliculasPage() {
-  const peliculas = await getPeliculas()
+  const peliculas = await getPeliculas() //wow, acabo de entender que aqui estare trayendo puras <PeliculaSimple>, no deja de ser una funcion getPeliculas()
   return (
     <>
       <div className="">
