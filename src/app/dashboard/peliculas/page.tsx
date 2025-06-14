@@ -42,10 +42,3 @@ export default async function PeliculasPage() {
   )
 }
 
-
-
-
-
-
-
-

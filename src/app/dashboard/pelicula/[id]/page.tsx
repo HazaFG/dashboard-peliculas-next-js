@@ -2,6 +2,8 @@ import { CastMember, CastResponse } from "@/peliculas/interfaces/pelicula-credit
 import { PeliculaIndividual } from "@/peliculas/interfaces/pelicula-individual";
 import { notFound } from "next/navigation";
 import Image from 'next/image'
+import { CreditsGrid } from "@/peliculas/components/CreditsGrid";
+import { ActorPelicula } from "@/peliculas/interfaces/pelicula-castmember";
 
 
 //Sigue leyendo esto cada vez que no lo entiendas, con el tiempo entenderas mejor
@@ -44,7 +46,7 @@ const getPelicula = async (id: string): Promise<PeliculaIndividual> => {
   }
 };
 
-const getActores = async (id: string): Promise<CastMember> => {
+const getActores = async (id: string): Promise<ActorPelicula> => {
   const api_key = process.env.NEXT_PUBLIC_TMDB_API_KEY
 
   try {
@@ -67,7 +69,6 @@ const getActores = async (id: string): Promise<CastMember> => {
       order: actor.order
     }))
 
-
     return creditos;
 
   } catch (error) {
@@ -79,7 +80,7 @@ const getActores = async (id: string): Promise<CastMember> => {
 export default async function PeliculaPage({ params }: Props) {
 
   const pelicula = await getPelicula(params.id);
-  const actores: CastMember = await getActores(params.id)
+  const actores: ActorPelicula[] = await getActores(params.id)
 
   return (
     <div className="flex min-h-screen overflow-x-hidden">
@@ -168,34 +169,8 @@ export default async function PeliculaPage({ params }: Props) {
           )}
         </div>
 
-        {/* Sección de Actores Principales - Con flex-wrap y gap para evitar scroll */}
-        <div className="max-w-full bg-white rounded-lg shadow-lg p-6 mb-8 overflow-hidden">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">Actores Principales</h2>
-          {actores.length > 0 ? (
-            <div className="flex flex-wrap justify-center gap-6 pb-4">
-              {actores.map(actor => (
-                <div key={actor.id} className="flex-shrink-0 w-32 text-center">
-                  <div className="relative overflow-hidden bg-gray-300 w-32 h-32 rounded-full mx-auto mb-2 flex items-center justify-center text-gray-500 text-sm shadow-md">
-                    {actor.profile_path ? (
-                      <Image
-                        src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
-                        fill
-                        alt={`Foto de ${actor.name}`}
-                        className="object-cover"
-                      />
-                    ) : (
-                      <span>Sin Foto</span>
-                    )}
-                  </div>
-                  <p className="font-semibold text-sm text-gray-800">{actor.name}</p>
-                  <p className="text-gray-600 text-xs">{actor.character}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-600">No hay información de actores disponible.</p>
-          )}
-        </div>
+        {/* Sección de Actores Principales - ando mandando el array por aqui */}
+        <CreditsGrid actoresArray={actores} />
 
         {/* Sección inferior: Detalles */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
