@@ -5,7 +5,7 @@ import { PeliculaGrid } from "@/peliculas/components/PeliculaGrid"
   //Aqui lo que haras sera basicamente traerte como arreglo la estructura de las peliculas
 }
 const getPeliculas = async (): Promise<PeliculaSimple[]> => {
-  const api_key = '4e72051e3bc2c615ed21d74e9a55ac50'
+  const api_key = process.env.NEXT_PUBLIC_TMDB_API_KEY
 
 
   const dataPostman: PeliculasResponse = await fetch(

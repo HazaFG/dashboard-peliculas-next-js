@@ -31,8 +31,7 @@ const menuItems = [
 export const Sidebar = () => {
   return (
     <>
-      <aside className="fixed top-0 pb-3 px-6 w-[300px] flex flex-col justify-between h-screen border-r bg-white transition duration-300 lg:ml-0
-        ">
+      <aside className="hidden md:block md:w-[300px] fixed z-50 top-0 pb-3 px-6 flex flex-col justify-between h-screen border-r bg-white transition duration-300 lg:ml-0">
         <div className="mt-22">
           <div className="flex justify-center">
             <Link href="/pepe" title="home">
@@ -41,8 +40,7 @@ export const Sidebar = () => {
                 className="w-32"
                 alt="tailus logo"
                 width={128} // Specify width and height for Next.js Image component
-                height={32} // Adjust as needed based on your image aspect ratio
-              />
+                height={32} />
             </Link>
           </div>
           <div className="flex flex-col justify-center items-center">

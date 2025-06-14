@@ -25,7 +25,7 @@ interface Props {
 
 //Aqui nos vamos a traer nuestras peliculas jaja, aun estoy intentando entender esta fregada
 const getPelicula = async (id: string): Promise<PeliculaIndividual> => {
-  const api_key = '4e72051e3bc2c615ed21d74e9a55ac50'
+  const api_key = process.env.NEXT_PUBLIC_TMDB_API_KEY
 
   try {
     const pelicula = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${api_key}`, {
@@ -45,7 +45,7 @@ const getPelicula = async (id: string): Promise<PeliculaIndividual> => {
 };
 
 const getActores = async (id: string): Promise<CastMember> => {
-  const api_key = '4e72051e3bc2c615ed21d74e9a55ac50'
+  const api_key = process.env.NEXT_PUBLIC_TMDB_API_KEY
 
   try {
     const credits: CastResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${api_key}`, {
@@ -82,33 +82,42 @@ export default async function PeliculaPage({ params }: Props) {
   const actores: CastMember = await getActores(params.id)
 
   return (
-    <>
-      <div className="bg-gray-900 min-h-screen text-gray-100 p-8 ml-80">
-        {/* Sección superior: Banner con imagen de Superman y detalles */}
-        <div className="relative bg-gray-800 rounded-lg shadow-lg overflow-hidden flex items-center p-6 mb-8">
-          <div className="w-1/4 pr-6 flex-shrink-0">
+    <div className="flex min-h-screen overflow-x-hidden">
+
+
+      {/* 'flex-1' lo hace crecer para ocupar el espacio restante. */}
+      {/* 'md:ml-[300px]' crea el espacio para el sidebar cuando está visible. */}
+      {/* 'overflow-x-hidden' se aplica aquí también para evitar desbordamientos internos. */}
+      <div className="flex-1 md:ml-[300px] bg-white min-h-screen text-gray-900 p-8 overflow-x-hidden">
+
+        {/* Sección superior: Banner con imagen y detalles - Ahora más flexible */}
+        <div className="relative bg-gray-100 rounded-lg shadow-lg overflow-hidden flex flex-wrap items-center p-6 mb-8">
+          {/* Contenedor del póster: permite que se ajuste al tamaño del contenido y se envuelva */}
+          <div className="w-full sm:w-1/4 pr-0 sm:pr-6 flex-shrink-0 mb-4 sm:mb-0">
             {pelicula.poster_path ? (
               <img
                 src={`https://image.tmdb.org/t/p/w500${pelicula.poster_path}`}
                 alt={`Póster de ${pelicula.title}`}
-                className="w-full h-auto rounded-lg object-cover"
+                className="w-full h-auto rounded-lg object-cover shadow-md mx-auto"
               />
             ) : (
-              <div className="bg-gray-700 h-96 w-full rounded-lg flex items-center justify-center text-gray-400 text-sm">
+              <div className="bg-gray-300 h-96 w-full rounded-lg flex items-center justify-center text-gray-500 text-sm">
                 Póster no disponible
               </div>
             )}
-            <div className="text-center mt-2 font-bold text-lg">{pelicula.title.toUpperCase()}</div>
+            <div className="text-center mt-2 font-bold text-lg text-gray-800">{pelicula.title.toUpperCase()}</div>
           </div>
-          <div className="w-3/4">
-            <h1 className="text-4xl font-bold mb-2">{pelicula.title} ({pelicula.release_date ? new Date(pelicula.release_date).getFullYear() : 'N/A'})</h1>
-            <div className="text-gray-400 text-sm mb-4">
+
+          {/* Contenedor de detalles: permite que se ajuste al tamaño del contenido */}
+          <div className="w-full sm:w-3/4">
+            <h1 className="text-2xl sm:text-4xl font-bold mb-2 text-gray-900">{pelicula.title} ({pelicula.release_date ? new Date(pelicula.release_date).getFullYear() : 'N/A'})</h1>
+            <div className="text-gray-600 text-sm mb-4">
               {pelicula.release_date ? new Date(pelicula.release_date).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }) : 'Fecha desconocida'} • {pelicula.genres.map(genre => genre.name).join(', ')} • {pelicula.runtime ? `${Math.floor(pelicula.runtime / 60)}h ${pelicula.runtime % 60}m` : 'N/A'}
             </div>
-            <div className="flex items-center space-x-4 mb-6">
+            <div className="flex flex-wrap items-center gap-4 mb-6">
               <div className="flex items-center">
-                <span className="text-xl font-bold mr-2">{pelicula.vote_average.toFixed(1)}</span>
-                <span className="text-gray-400">/ 10</span>
+                <span className="text-xl font-bold mr-2 text-gray-800">{pelicula.vote_average.toFixed(1)}</span>
+                <span className="text-gray-600">/ 10</span>
               </div>
               <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.185A1 1 0 0111 8v4a1 1 0 01-1.445.815L7.5 10.5 9.555 7.185z" clipRule="evenodd"></path></svg>
@@ -116,27 +125,27 @@ export default async function PeliculaPage({ params }: Props) {
               </button>
             </div>
             <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-2">Resumen</h2>
-              <p className="text-gray-300 leading-relaxed">
+              <h2 className="text-xl font-semibold mb-2 text-gray-800">Resumen</h2>
+              <p className="text-gray-700 leading-relaxed">
                 {pelicula.overview || pelicula.tagline || 'No hay resumen disponible.'}
               </p>
             </div>
-            <div className="grid grid-cols-3 gap-4 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
               <div>
-                <span className="font-semibold">Escritor:</span>
-                <p className="text-gray-400">
+                <span className="font-semibold text-gray-800">Escritor:</span>
+                <p className="text-gray-600">
                   James Gunn, Jerry Siegel
                 </p>
               </div>
               <div>
-                <span className="font-semibold">Director:</span>
-                <p className="text-gray-400">
+                <span className="font-semibold text-gray-800">Director:</span>
+                <p className="text-gray-600">
                   James Gunn
                 </p>
               </div>
               <div>
-                <span className="font-semibold">Productores:</span>
-                <p className="text-gray-400">
+                <span className="font-semibold text-gray-800">Productores:</span>
+                <p className="text-gray-600">
                   {pelicula.production_companies.length > 0
                     ? pelicula.production_companies.map(company => company.name).join(', ')
                     : 'N/A'}
@@ -145,124 +154,130 @@ export default async function PeliculaPage({ params }: Props) {
             </div>
           </div>
 
-          {/* Aquí iría la imagen del actor en el banner superior derecho o el backdrop */}
+          {/* Imagen de fondo del banner (ahora con hidden por defecto y solo visible en md para evitar conflictos en mobile) */}
           {pelicula.backdrop_path ? (
             <img
               src={`https://image.tmdb.org/t/p/w500${pelicula.backdrop_path}`}
               alt={`Imagen de fondo de ${pelicula.title}`}
-              className="absolute top-0 right-0 w-1/4 h-full object-cover opacity-70"
+              className="absolute top-0 right-0 w-1/4 h-full object-cover opacity-70 hidden md:block"
             />
           ) : (
-            <div className="absolute top-0 right-0 w-1/4 h-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm opacity-70">
+            <div className="absolute top-0 right-0 w-1/4 h-full bg-gray-300 flex items-center justify-center text-gray-500 text-sm opacity-70 hidden md:block">
               Imagen de fondo no disponible
             </div>
           )}
         </div>
 
-        {/* Sección de Actores Principales */}
-        <div className="overflow-x-auto max-w-410 bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-6">Actores Principales</h2>
-          <div className="flex space-x-6 overflow-x-auto pb-4">
-            {
-              actores.map(actor => (
-                < div key={actor.id} className="flex-shrink-0 w-32 text-center" >
-                  <div className="relative bg-gray-700 h-32 w-32 rounded-full mx-auto mb-2 flex items-center justify-center text-gray-400 text-sm">
-                    <Image
-                      src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
-                      fill
-                      alt="imagen del actor"
-                    />
-
+        {/* Sección de Actores Principales - Con flex-wrap y gap para evitar scroll */}
+        <div className="max-w-full bg-white rounded-lg shadow-lg p-6 mb-8 overflow-hidden">
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">Actores Principales</h2>
+          {actores.length > 0 ? (
+            <div className="flex flex-wrap justify-center gap-6 pb-4">
+              {actores.map(actor => (
+                <div key={actor.id} className="flex-shrink-0 w-32 text-center">
+                  <div className="relative overflow-hidden bg-gray-300 w-32 h-32 rounded-full mx-auto mb-2 flex items-center justify-center text-gray-500 text-sm shadow-md">
+                    {actor.profile_path ? (
+                      <Image
+                        src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
+                        fill
+                        alt={`Foto de ${actor.name}`}
+                        className="object-cover"
+                      />
+                    ) : (
+                      <span>Sin Foto</span>
+                    )}
                   </div>
-                  <p className="font-semibold text-sm">{actor.name}</p>
-                  <p className="text-gray-400 text-xs">{actor.character}</p>
+                  <p className="font-semibold text-sm text-gray-800">{actor.name}</p>
+                  <p className="text-gray-600 text-xs">{actor.character}</p>
                 </div>
-              ))
-            }
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-600">No hay información de actores disponible.</p>
+          )}
         </div>
 
-        {/* Sección inferior: Reporte, Social, Reseñas, Discusión y detalles */}
-        <div className="grid grid-cols-3 gap-8">
-          <div className="col-span-2">
-            <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-              <h2 className="text-2xl font-bold mb-4">Social</h2>
+        {/* Sección inferior: Detalles */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
+          <div className="col-span-1 md:col-span-2 lg:col-span-2">
+            <div className="bg-gray-100 rounded-lg shadow-lg p-6 mb-8">
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 text-gray-800">Social</h2>
               <div className="space-y-4">
-                <div className="bg-gray-700 p-4 rounded-lg">
-                  <p className="text-gray-300">"¡Amo el mundo, necesito Superman!"</p>
+                <div className="bg-gray-200 p-4 rounded-lg">
+                  <p className="text-gray-700">"¡Amo el mundo, necesito Superman!"</p>
                   <p className="text-gray-500 text-xs mt-2">17 Ago 2024</p>
                 </div>
-                <div className="bg-gray-700 p-4 rounded-lg">
-                  <p className="text-gray-300">"¡Alicea Gale y Tráilers 'Hey buddy, eyes up here!'"</p>
+                <div className="bg-gray-200 p-4 rounded-lg">
+                  <p className="text-gray-700">"¡Alicea Gale y Tráilers 'Hey buddy, eyes up here!'"</p>
                   <p className="text-gray-500 text-xs mt-2">23 May 2024</p>
                 </div>
-                <div className="bg-gray-700 p-4 rounded-lg">
-                  <p className="text-gray-300">"¡Noticias de CGI y La Joven Clark Kent / Superman de 4 años!"</p>
+                <div className="bg-gray-200 p-4 rounded-lg">
+                  <p className="text-gray-700">"¡Noticias de CGI y La Joven Clark Kent / Superman de 4 años!"</p>
                   <p className="text-gray-500 text-xs mt-2">09 Ene 2024</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Columna lateral derecha */}
-          <div className="col-span-1">
-            <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-              <h2 className="text-xl font-bold mb-4">Detalles</h2>
+          {/* Columna lateral derecha - ahora es responsiva */}
+          <div className="col-span-1 lg:col-span-1">
+            <div className="bg-gray-100 rounded-lg shadow-lg p-6 mb-8">
+              <h2 className="text-xl font-bold mb-4 text-gray-800">Detalles</h2>
               <div className="space-y-2 text-sm">
                 <div>
-                  <span className="font-semibold">Estado:</span>
-                  <p className="text-gray-400">{pelicula.status}</p>
+                  <span className="font-semibold text-gray-800">Estado:</span>
+                  <p className="text-gray-600">{pelicula.status}</p>
                 </div>
                 <div>
-                  <span className="font-semibold">Idioma original:</span>
-                  <p className="text-gray-400">
+                  <span className="font-semibold text-gray-800">Idioma original:</span>
+                  <p className="text-gray-600">
                     {pelicula.spoken_languages.find(lang => lang.iso_639_1 === pelicula.original_language)?.english_name || pelicula.original_language}
                   </p>
                 </div>
                 <div>
-                  <span className="font-semibold">Presupuesto:</span>
-                  <p className="text-gray-400">{pelicula.budget > 0 ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(pelicula.budget) : 'N/A'}</p>
+                  <span className="font-semibold text-gray-800">Presupuesto:</span>
+                  <p className="text-gray-600">{pelicula.budget > 0 ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(pelicula.budget) : 'N/A'}</p>
                 </div>
                 <div>
-                  <span className="font-semibold">Ingresos:</span>
-                  <p className="text-gray-400">{pelicula.revenue > 0 ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(pelicula.revenue) : 'N/A'}</p>
+                  <span className="font-semibold text-gray-800">Ingresos:</span>
+                  <p className="text-gray-600">{pelicula.revenue > 0 ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(pelicula.revenue) : 'N/A'}</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-              <h2 className="text-xl font-bold mb-4">Palabras clave</h2>
+            <div className="bg-gray-100 rounded-lg shadow-lg p-6 mb-8">
+              <h2 className="text-xl font-bold mb-4 text-gray-800">Palabras clave</h2>
               <div className="flex flex-wrap gap-2">
-                <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs">DC</span>
-                <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs">Superhéroe</span>
-                <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs">Aventura</span>
-                <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-xs">Cómic</span>
+                <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs">DC</span>
+                <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs">Superhéroe</span>
+                <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs">Aventura</span>
+                <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs">Cómic</span>
               </div>
             </div>
 
-            <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-              <h2 className="text-xl font-bold mb-4">Calificación del contenido</h2>
-              <div className="bg-gray-700 text-white font-bold text-center py-2 rounded-lg text-lg">
-                {pelicula.adult ? 'Adulto (+18)' : 'Para todo público'} {/* Inferencia básica */}
+            <div className="bg-gray-100 rounded-lg shadow-lg p-6 mb-8">
+              <h2 className="text-xl font-bold mb-4 text-gray-800">Calificación del contenido</h2>
+              <div className="bg-gray-200 text-gray-800 font-bold text-center py-2 rounded-lg text-lg">
+                {pelicula.adult ? 'Adulto (+18)' : 'Para todo público'}
               </div>
             </div>
 
-            <div className="bg-gray-800 rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-bold mb-4">Colaboradores Destacados</h2>
+            <div className="bg-gray-100 rounded-lg shadow-lg p-6">
+              <h2 className="text-xl font-bold mb-4 text-gray-800">Colaboradores Destacados</h2>
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gray-700 rounded-full flex-shrink-0"></div>
-                  <span className="text-gray-300">Usuario 1</span>
+                  <div className="w-8 h-8 bg-gray-200 rounded-full flex-shrink-0"></div>
+                  <span className="text-gray-700">Usuario 1</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gray-700 rounded-full flex-shrink-0"></div>
-                  <span className="text-gray-300">Usuario 2</span>
+                  <div className="w-8 h-8 bg-gray-200 rounded-full flex-shrink-0"></div>
+                  <span className="text-gray-700">Usuario 2</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div >
-    </>
+      </div>
+    </div>
   )
 }
