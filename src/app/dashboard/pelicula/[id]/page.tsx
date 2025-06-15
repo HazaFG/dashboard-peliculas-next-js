@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Image from 'next/image'
 import { CreditsGrid } from "@/peliculas/components/CreditsGrid";
 import { ActorPelicula } from "@/peliculas/interfaces/pelicula-castmember";
+import { Keyword, KeywordsResponse } from "@/peliculas/interfaces/pelicula-keywords";
 
 
 //Sigue leyendo esto cada vez que no lo entiendas, con el tiempo entenderas mejor
@@ -25,10 +26,11 @@ interface Props {
   params: { id: string };
 }
 
+const api_key = process.env.NEXT_PUBLIC_TMDB_API_KEY
+
+
 //Aqui nos vamos a traer nuestras peliculas jaja, aun estoy intentando entender esta fregada
 const getPelicula = async (id: string): Promise<PeliculaIndividual> => {
-  const api_key = process.env.NEXT_PUBLIC_TMDB_API_KEY
-
   try {
     const pelicula = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${api_key}`, {
       cache: "force-cache", // TODO: cambiar esto en un futuro
@@ -47,8 +49,6 @@ const getPelicula = async (id: string): Promise<PeliculaIndividual> => {
 };
 
 const getActores = async (id: string): Promise<ActorPelicula> => {
-  const api_key = process.env.NEXT_PUBLIC_TMDB_API_KEY
-
   try {
     const credits: CastResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${api_key}`, {
       cache: "force-cache",
@@ -77,10 +77,31 @@ const getActores = async (id: string): Promise<ActorPelicula> => {
   }
 }
 
+const getKeywords = async (id: string): Promise<Keyword[]> => {
+  try {
+    const palabrasClave: KeywordsResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/keywords?api_key=${api_key}`, {
+      cache: 'force-cache'
+    }).then((respuesta) => respuesta.json())
+
+    const data = palabrasClave.keywords.map(palabraClave => ({
+      id: palabraClave.id,
+      name: palabraClave.name
+    }));
+
+    return data;
+
+  } catch (error) {
+    console.error("Error al obtener los keyword de la pelicula, error")
+    notFound()
+  }
+
+}
+
 export default async function PeliculaPage({ params }: Props) {
 
   const pelicula = await getPelicula(params.id);
   const actores: ActorPelicula[] = await getActores(params.id)
+  const keywords: Keyword[] = await getKeywords(params.id)
 
   return (
     <div className="flex min-h-screen overflow-x-hidden">
@@ -172,7 +193,7 @@ export default async function PeliculaPage({ params }: Props) {
         {/* Sección de Actores Principales - ando mandando el array por aqui */}
         <CreditsGrid actoresArray={actores} />
 
-        {/* Sección inferior: Detalles */}
+        {/* Sección inferior: esta es la parte de social */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
           <div className="col-span-1 md:col-span-2 lg:col-span-2">
             <div className="bg-gray-100 rounded-lg shadow-lg p-6 mb-8">
@@ -220,20 +241,23 @@ export default async function PeliculaPage({ params }: Props) {
               </div>
             </div>
 
+            {/* Seccion de palabras clave             */}
             <div className="bg-gray-100 rounded-lg shadow-lg p-6 mb-8">
               <h2 className="text-xl font-bold mb-4 text-gray-800">Palabras clave</h2>
               <div className="flex flex-wrap gap-2">
-                <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs">DC</span>
-                <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs">Superhéroe</span>
-                <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs">Aventura</span>
-                <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs">Cómic</span>
+                {keywords.map(keyword =>
+                  <div key={keyword.id}>
+                    <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs">{keyword.name}</span>
+                  </div>
+                )}
               </div>
             </div>
 
+            {/* Clasificacion de contenido */}
             <div className="bg-gray-100 rounded-lg shadow-lg p-6 mb-8">
               <h2 className="text-xl font-bold mb-4 text-gray-800">Calificación del contenido</h2>
               <div className="bg-gray-200 text-gray-800 font-bold text-center py-2 rounded-lg text-lg">
-                {pelicula.adult ? 'Adulto (+18)' : 'Para todo público'}
+                {pelicula.adult ? 'Para adultos' : 'Para todo público'}
               </div>
             </div>
 
