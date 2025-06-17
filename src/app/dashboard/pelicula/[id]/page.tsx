@@ -94,7 +94,6 @@ const getKeywords = async (id: string): Promise<Keyword[]> => {
     console.error("Error al obtener los keyword de la pelicula, error")
     notFound()
   }
-
 }
 
 export default async function PeliculaPage({ params }: Props) {
