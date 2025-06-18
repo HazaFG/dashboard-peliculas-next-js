@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CreditsGrid } from "@/peliculas/components/CreditsGrid";
 import { ActorPelicula } from "@/peliculas/interfaces/pelicula-castmember";
 import { Keyword, KeywordsResponse } from "@/peliculas/interfaces/pelicula-keywords";
+import { PeliculasResponse } from "@/peliculas";
 
 
 //Sigue leyendo esto cada vez que no lo entiendas, con el tiempo entenderas mejor
@@ -20,13 +21,23 @@ import { Keyword, KeywordsResponse } from "@/peliculas/interfaces/pelicula-keywo
 //          ├─ getPelicula(123)
 //          ├─ Renderiza detalles de la película 123
 
+const api_key = process.env.NEXT_PUBLIC_TMDB_API_KEY
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
-const api_key = process.env.NEXT_PUBLIC_TMDB_API_KEY
+//Esto va en el build time, SEccion 6 curso next js, static generation
+export async function generateStaticParams() {
+  const data: PeliculasResponse = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${api_key}`)
+    .then((res) => res.json())
 
+  const static20Movies = data.results.map(pelicula => ({
+    id: pelicula.id.toString()
+  }))
+
+  return static20Movies;
+}
 
 //Aqui nos vamos a traer nuestras peliculas jaja, aun estoy intentando entender esta fregada
 const getPelicula = async (id: string): Promise<PeliculaIndividual> => {
