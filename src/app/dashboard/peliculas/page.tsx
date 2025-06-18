@@ -13,10 +13,10 @@ const getPeliculas = async (): Promise<PeliculaSimple[]> => {
   ).then(res => res.json())
 
   //Revisa la imagen que se llama 'tatuate esto si quieres entender las apis' para entender esto que haras Aqui
-  const peliculas = dataPostman.results.map(pelicula => ({
+  const peliculas: PeliculaSimple[] = dataPostman.results.map((pelicula) => ({
     adult: pelicula.adult,
     backdrop_path: pelicula.backdrop_path,
-    genre_ads: pelicula.genre_ads,
+    genre_ids: pelicula.genre_ids,
     id: pelicula.id,
     original_language: pelicula.original_language,
     original_title: pelicula.original_title,
@@ -25,7 +25,10 @@ const getPeliculas = async (): Promise<PeliculaSimple[]> => {
     poster_path: pelicula.poster_path,
     release_date: pelicula.release_date,
     title: pelicula.title,
-  }))
+    video: pelicula.video,
+    vote_average: pelicula.vote_average,
+    vote_count: pelicula.vote_count,
+  }));
 
   return peliculas;
 }

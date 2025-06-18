@@ -1,7 +1,6 @@
-import { CastMember, CastResponse } from "@/peliculas/interfaces/pelicula-credits";
+import { CastResponse } from "@/peliculas/interfaces/pelicula-credits";
 import { PeliculaIndividual } from "@/peliculas/interfaces/pelicula-individual";
 import { notFound } from "next/navigation";
-import Image from 'next/image'
 import { CreditsGrid } from "@/peliculas/components/CreditsGrid";
 import { ActorPelicula } from "@/peliculas/interfaces/pelicula-castmember";
 import { Keyword, KeywordsResponse } from "@/peliculas/interfaces/pelicula-keywords";
@@ -23,7 +22,7 @@ import { Keyword, KeywordsResponse } from "@/peliculas/interfaces/pelicula-keywo
 
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 const api_key = process.env.NEXT_PUBLIC_TMDB_API_KEY
@@ -48,7 +47,7 @@ const getPelicula = async (id: string): Promise<PeliculaIndividual> => {
   }
 };
 
-const getActores = async (id: string): Promise<ActorPelicula> => {
+const getActores = async (id: string): Promise<ActorPelicula[]> => {
   try {
     const credits: CastResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${api_key}`, {
       cache: "force-cache",
@@ -91,6 +90,7 @@ const getKeywords = async (id: string): Promise<Keyword[]> => {
     return data;
 
   } catch (error) {
+    console.log("no se pudieron obtener la keywords", error)
     console.error("Error al obtener los keyword de la pelicula, error")
     notFound()
   }
@@ -98,9 +98,9 @@ const getKeywords = async (id: string): Promise<Keyword[]> => {
 
 export default async function PeliculaPage({ params }: Props) {
 
-  const pelicula = await getPelicula(params.id);
-  const actores: ActorPelicula[] = await getActores(params.id)
-  const keywords: Keyword[] = await getKeywords(params.id)
+  const pelicula = await getPelicula((await params).id);
+  const actores = await getActores((await params).id)
+  const keywords: Keyword[] = await getKeywords((await params).id)
 
   return (
     <div className="flex min-h-screen overflow-x-hidden">
@@ -199,15 +199,15 @@ export default async function PeliculaPage({ params }: Props) {
               <h2 className="text-xl sm:text-2xl font-bold mb-4 text-gray-800">Social</h2>
               <div className="space-y-4">
                 <div className="bg-gray-200 p-4 rounded-lg">
-                  <p className="text-gray-700">"¡Amo el mundo, necesito Superman!"</p>
+                  <p className="text-gray-700">¡Amo el mundo, necesito Superman!</p>
                   <p className="text-gray-500 text-xs mt-2">17 Ago 2024</p>
                 </div>
                 <div className="bg-gray-200 p-4 rounded-lg">
-                  <p className="text-gray-700">"¡Alicea Gale y Tráilers 'Hey buddy, eyes up here!'"</p>
+                  <p className="text-gray-700">¡Alicea Gale y Tráilers Hey buddy, eyes up here!</p>
                   <p className="text-gray-500 text-xs mt-2">23 May 2024</p>
                 </div>
                 <div className="bg-gray-200 p-4 rounded-lg">
-                  <p className="text-gray-700">"¡Noticias de CGI y La Joven Clark Kent / Superman de 4 años!"</p>
+                  <p className="text-gray-700">¡Noticias de CGI y La Joven Clark Kent / Superman de 4 años!</p>
                   <p className="text-gray-500 text-xs mt-2">09 Ene 2024</p>
                 </div>
               </div>

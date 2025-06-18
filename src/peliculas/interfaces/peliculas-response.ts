@@ -6,7 +6,7 @@ export interface PeliculasResponse {
 export interface Result {
   adult: boolean,
   backdrop_path: string,
-  genre_ads: Array<number>,
+  genre_ids: Array<number>,
   id: number,
   original_language: string,
   original_title: string,
