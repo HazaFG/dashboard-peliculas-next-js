@@ -12,10 +12,22 @@ const counterSlice = createSlice({
   name: 'sliceName',
   initialState,
   reducers: {
-    // reducers here
+    addOne(state) {
+      state.count++;
+    },
+
+    substractOne(state) {
+      if (state.count === 0) return;
+      state.count--;
+    },
+
+    resetCount(state, action: PayloadAction<number>) {
+      if (action.payload < 0) action.payload = 0;
+      state.count = action.payload;
+    }
   }
 });
 
-export const { } = counterSlice.actions;
+export const { addOne, substractOne, resetCount } = counterSlice.actions;
 
 export default counterSlice.reducer;
