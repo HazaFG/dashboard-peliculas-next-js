@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
+//Aqui le puedo poner el nombre que yo quiera, pero ese nombre es para identificar que es el reducer del counter
 import counterReducer from './counter/counterSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
