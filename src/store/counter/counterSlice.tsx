@@ -1,3 +1,5 @@
+//Esta mierda maneja la logica del counter, del slice
+
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface CounterState {

@@ -4,6 +4,7 @@ import counterReducer from './counter/counterSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 export const store = configureStore({
+  //esta mierda exporta los slices, nuestros pedazos
   reducer: {
     counter: counterReducer,
   },
