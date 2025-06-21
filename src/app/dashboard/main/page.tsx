@@ -1,5 +1,12 @@
 import { SimpleWidget } from "@/components/SimpleWidget"
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pagina principal",
+  description: "Pagina Principal peliculas",
+};
+
 export default function HomePage() {
   return (
     <div className="flex">

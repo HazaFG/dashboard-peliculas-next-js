@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Sidebar } from "@/components";
+import { Providers } from "@/store/Providers";
 
 
 export const metadata: Metadata = {
@@ -19,7 +20,9 @@ export default function RootLayout({
         {/*Bueno, aqui vamos a meter nuestro sidebar*/}
         <Sidebar></Sidebar>
         <div className="flex justify-center w-full">
-          <div>{children}</div>
+          <Providers>
+            <div>{children}</div>
+          </Providers>
         </div>
       </div>
     </>
