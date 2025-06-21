@@ -21,9 +21,9 @@ const menuItems = [
     title: 'Peliculas'
   },
   {
-    path: '/dashboard/actores',
+    path: '/dashboard/favorites',
     icon: <IoEarthOutline size={25}></IoEarthOutline>,
-    title: 'Actores/Artistas'
+    title: 'Películas favoritas'
   }
 ]
 
