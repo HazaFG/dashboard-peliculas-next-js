@@ -3,7 +3,7 @@
 
 import { IoCafeOutline } from "react-icons/io5"
 
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useAppSelector } from "@/store";
 
 export const SimpleWidget = () => {
   //state es tu RootState(todo tu store).
