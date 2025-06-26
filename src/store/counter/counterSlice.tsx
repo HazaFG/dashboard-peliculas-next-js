@@ -18,8 +18,11 @@ const counterSlice = createSlice({
   initialState,
   reducers: {
     initCounterState(state, action: PayloadAction<number>) {
+      //Si esto ya esta ready, no hace absolutamente nada
       if (state.isReady) return;
 
+      //🔧 ¿Qué es un payload otra vez?
+      // El payload es información que tú le mandas a la acción para que el reducer sepa cómo actualizar el estado.
       state.count = action.payload;
       state.isReady = true
     },
@@ -32,14 +35,9 @@ const counterSlice = createSlice({
       if (state.count === 0) return;
       state.count--;
     },
-
-    resetCount(state, action: PayloadAction<number>) {
-      if (action.payload < 0) action.payload = 0;
-      state.count = action.payload;
-    }
   }
 });
 
-export const { addOne, substractOne, resetCount, initCounterState } = counterSlice.actions;
+export const { addOne, substractOne, initCounterState } = counterSlice.actions;
 
 export default counterSlice.reducer;

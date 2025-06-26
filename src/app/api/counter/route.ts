@@ -8,7 +8,6 @@ export async function GET(request: Request) {
     method: 'GET',
     count: 100
   })
-
 }
 
 
