@@ -6,7 +6,7 @@ export async function GET(request: Request) {
 
   return NextResponse.json({
     method: 'GET',
-    count: 5
+    count: 100
   })
 
 }
