@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { ActorPelicula } from '../interfaces/pelicula-castmember'
+import { IoHeartCircle } from 'react-icons/io5';
 
 interface Props {
   //Aqui no se pasa el arreglo porque pues este es un actor individual, no un arreglo, asi que si, es por eso, ahora lo entiendo mejor

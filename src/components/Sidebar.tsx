@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { IoHome, IoCalculatorOutline, IoVideocamOutline, IoEarthOutline } from "react-icons/io5"
+import { IoHome, IoCalculatorOutline, IoVideocamOutline, IoHeartOutline } from "react-icons/io5"
 import { SidebarMenuItem } from "./SidebarMenuItem";
 
 
@@ -22,7 +22,7 @@ const menuItems = [
   },
   {
     path: '/dashboard/favorites',
-    icon: <IoEarthOutline size={25}></IoEarthOutline>,
+    icon: <IoHeartOutline size={25}></IoHeartOutline>,
     title: 'Películas favoritas'
   }
 ]

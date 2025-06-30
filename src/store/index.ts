@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 //Aqui le puedo poner el nombre que yo quiera, pero ese nombre es para identificar que es el reducer del counter
 import counterSlice from './counter/counterSlice'
+import favoriteMovieState from './peliculas/peliculas'
 import { useDispatch, useSelector } from 'react-redux'
 
 export const store = configureStore({
@@ -8,6 +9,7 @@ export const store = configureStore({
   reducer: {
     //y esto a su vez tambien lo que hace es que, estas son las funciones que realmente tienen el poder de cambiar el state
     contador: counterSlice,
+    favoritos: favoriteMovieState
   },
 })
 
