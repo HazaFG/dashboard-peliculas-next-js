@@ -10,7 +10,7 @@ export const SimpleWidget = () => {
   //state.counter es tu slice de counter.
   //state.counter.count es el valor que definiste en initialState.
 
-  const count = useAppSelector(state => state.counter.count)
+  const count = useAppSelector(state => state.contador.count)
 
   return (
     <div className="bg-white shadow-xl p-3 sm:min-w-[25%] min-w-full  rounded-2xl border-1 border-gray-50 mx-2 m-4">

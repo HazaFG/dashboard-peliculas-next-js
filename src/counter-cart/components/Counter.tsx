@@ -22,7 +22,8 @@ const getCountApi = async (): Promise<ApiResponse> => {
 }
 
 export const Counter = () => {
-  const count = useAppSelector(state => state.counter.count)
+  // contador es el nombre que se le pone al counter en el index.ts, es con el nombre que lo exportas por asi decirlo
+  const count = useAppSelector(state => state.contador.count)
   const dispatch = useAppDispatch();
 
   useEffect(() => {

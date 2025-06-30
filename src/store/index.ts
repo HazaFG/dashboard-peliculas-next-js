@@ -1,12 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 //Aqui le puedo poner el nombre que yo quiera, pero ese nombre es para identificar que es el reducer del counter
-import counterReducer from './counter/counterSlice'
+import counterSlice from './counter/counterSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 export const store = configureStore({
   //esta mierda exporta los slices, nuestros pedazos
   reducer: {
-    counter: counterReducer,
+    //y esto a su vez tambien lo que hace es que, estas son las funciones que realmente tienen el poder de cambiar el state
+    contador: counterSlice,
   },
 })
 

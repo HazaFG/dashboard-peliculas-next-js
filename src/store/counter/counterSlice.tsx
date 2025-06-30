@@ -7,6 +7,7 @@ interface CounterState {
   isReady: boolean;
 }
 
+//Este es el state que realmente importa
 const initialState: CounterState = {
   count: 5,
   isReady: false,
@@ -17,6 +18,7 @@ const counterSlice = createSlice({
   name: 'sliceName',
   initialState,
   reducers: {
+    //Estas son las actions jeje
     initCounterState(state, action: PayloadAction<number>) {
       //Si esto ya esta ready, no hace absolutamente nada
       if (state.isReady) return;
