@@ -41,7 +41,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 
 interface FavoriteState {
-  [key: string]: PeliculaSimple;
+  [id: string]: PeliculaSimple;
 }
 
 const initialState: FavoriteState = {
