@@ -5,7 +5,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { PeliculaSimple } from '../interfaces/pelicula-simple'
 import { IoHeart, IoHeartOutline, } from 'react-icons/io5';
-import { useAppSelector } from '@/store';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { toggleFavorites } from '@/store/peliculas/peliculas';
 
 interface Props {
   //Aqui es solo la estructura, no el arreglo, el arreglo lo ocupas en la Grid, ya que en la grid es donde van los arreglos por el fetch de page  
@@ -17,6 +18,13 @@ export const PeliculaCard = ({ pelicula }: Props) => {
   const { id, title, release_date, poster_path } = pelicula;
 
   const isFavorite = useAppSelector(state => state.favoritos[id.toString()] !== undefined)
+  const dispatch = useAppDispatch()
+
+
+  const toggleFavoriteMovie = () => {
+    dispatch(toggleFavorites(pelicula))
+  }
+
   console.log({ isFavorite })
 
   return (
@@ -38,11 +46,11 @@ export const PeliculaCard = ({ pelicula }: Props) => {
               {title}
             </h2>
             <p className="text-sm text-black">{release_date}</p>
-            <Link href={'/dashboard/main'} className='text-red-600'>
+            <div onClick={toggleFavoriteMovie} className='text-red-600'>
               {
                 isFavorite ? (<IoHeart></IoHeart>) : (<IoHeartOutline></IoHeartOutline>)
               }
-            </Link>
+            </div>
           </div>
         </div>
       </div>

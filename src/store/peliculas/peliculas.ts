@@ -67,9 +67,20 @@ const favoriteMovieState = createSlice({
   name: 'sliceName',
   initialState,
   reducers: {
-    // reducers here
+    toggleFavorites(state, action: PayloadAction<PeliculaSimple>) {
+      const pelicula = action.payload;
+      const { id } = pelicula;
+
+      if (state[id]) {
+        delete state[id]
+        return
+      }
+
+
+      state[id] = pelicula
+    }
   }
 });
 
-export const { } = favoriteMovieState.actions;
+export const { toggleFavorites } = favoriteMovieState.actions;
 export default favoriteMovieState.reducer;
