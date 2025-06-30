@@ -16,7 +16,7 @@ interface Props {
 export const PeliculaCard = ({ pelicula }: Props) => {
   const { id, title, release_date, poster_path } = pelicula;
 
-  const isFavorite = useAppSelector(state => state.favoritos[id] !== undefined)
+  const isFavorite = useAppSelector(state => state.favoritos[id.toString()] !== undefined)
   console.log({ isFavorite })
 
   return (
